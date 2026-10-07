@@ -22,3 +22,21 @@ async def test_render_async_supports_undetermined_score() -> None:
     output = await printer.render_async([score])
 
     assert "Value: undetermined" in output
+
+
+async def test_render_async_joins_score_categories() -> None:
+    printer = PrettyScorePrinter(enable_colors=False)
+    score = Score(score_value="true", score_type="true_false", score_category=["refusal", "scams"])
+
+    output = await printer.render_async([score])
+
+    assert "Category: refusal, scams" in output
+
+
+async def test_render_async_renders_missing_category_as_na() -> None:
+    printer = PrettyScorePrinter(enable_colors=False)
+    score = Score(score_value="true", score_type="true_false")
+
+    output = await printer.render_async([score])
+
+    assert "Category: N/A" in output
